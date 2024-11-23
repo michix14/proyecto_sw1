@@ -3,7 +3,14 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\EjercicioController;
+use App\Http\Controllers\API\EjercicioIAController;
+use App\Http\Controllers\API\ErroresController;
+use App\Http\Controllers\API\LeccionController;
+use App\Http\Controllers\API\NivelController;
+use App\Http\Controllers\API\ProgresoController;
 use App\Http\Controllers\API\UserController;
+use App\Models\EjercicioIA;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +25,12 @@ use App\Http\Controllers\API\UserController;
 Route::get('validate-token',[AuthController::class, 'validateToken']);
 Route::post('login',[AuthController::class, 'login']);
 Route::post('register', [UserController::class, 'store']);
+Route::apiResource('nivel', NivelController::class);
+Route::apiResource('leccion', LeccionController::class);
+Route::apiResource('ejercicio', EjercicioController::class);
+Route::apiResource('ejercicioIA', EjercicioIAController::class);
+Route::apiResource('progreso', ProgresoController::class);
+Route::apiResource('errores', ErroresController::class);
 
 
 
