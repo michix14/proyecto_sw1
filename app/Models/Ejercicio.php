@@ -13,7 +13,7 @@ class Ejercicio extends Model
         'pregunta_texto',
         'pregunta_audio',
         'respuesta_texto',
-        'respuesta_texto',
+        'respuesta_audio',
         'dificultad',
     ];
 

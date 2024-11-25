@@ -76,4 +76,17 @@ class LeccionController extends Controller
         $leccion->delete();
         return response()->json(['message' => 'Leccion borrada exitosamente'], 200);
     }
+
+    //funciones rol estudiante
+    public function getExercises($id)
+    {
+        $leccion = Leccion::find($id);
+
+        if (!$leccion) {
+            return response()->json(['error' => 'leccion no encontrada'], 404);
+        }
+
+        $ejercicios = $leccion->ejercicio; // Usa la relación definida en el modelo Lesson
+        return response()->json($ejercicios, 200);
+    }
 }

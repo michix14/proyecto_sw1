@@ -78,4 +78,42 @@ class ProgresoController extends Controller
         $progreso->delete();
         return response()->json(['message' => 'progreso borrado exitosamente'], 200); //
     }
+
+    //funciones para el rol estudiante-----------------------------
+
+    // Consulta el progreso del usuario autenticado
+    public function getProgress(Request $request)
+    {
+        $user = $request->user();
+
+        $progreso = Progreso::with('leccion')
+            ->where('user_id', $user->id)
+            ->get();
+
+        return response()->json($progreso, 200);
+    }
+
+    // Marca una lección como completada
+    public function markComplete($leccionId, Request $request)
+    {
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['error' => 'Usuario no autenticado'], 401);
+        }
+
+        $progreso = Progreso::updateOrCreate(
+            [
+                'user_id' => $user->id,
+                'leccion_id' => $leccionId,
+            ],
+            [
+                'completado' => true,
+                'completado_fecha' => now(),
+            ]
+        );
+
+        return response()->json(['message' => 'Leccion marcada como completada', 'progreso' => $progreso], 200);
+    }
+    
+    
 }
