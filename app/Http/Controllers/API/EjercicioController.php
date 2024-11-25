@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Ejercicio;
+use App\Models\Errores;
 use Illuminate\Http\Request;
 
 class EjercicioController extends Controller
@@ -97,5 +98,45 @@ class EjercicioController extends Controller
 
         $ejercicio->delete();
         return response()->json(['message' => 'Ejercicio borrado exitosamente'], 200); //
+    }
+
+    //funciones para el rol estudiante
+
+    // Evaluar la respuesta del estudiante
+    public function submit($id, Request $request)
+    {
+        $ejercicio = Ejercicio::find($id);
+
+        if (!$ejercicio) {
+            return response()->json(['error' => 'ejercicio no encontrado'], 404);
+        }
+
+        $validated = $request->validate([
+            'respuesta_usuario' => 'required|string',
+        ]);
+
+        // Simular la evaluación (puedes usar lógica más avanzada)
+        $esCorrecto = trim(strtolower($validated['respuesta_usuario'])) === 
+        trim(strtolower($ejercicio->respuesta_texto));
+
+        if (!$esCorrecto) {
+            // Registrar en la tabla de errores
+            Errores::create([
+                'user_id' => $request->user()->id,
+                'ejercicio_id' => $ejercicio->id,
+                'error_tipo' => 'Respuesta Incorrecta',
+                'detalles' => json_encode([
+                    'respuesta_usuario' => $validated['respuesta_usuario'],
+                    'respuesta_correcta' => $ejercicio->respuesta_texto,
+                ]),
+            ]);
+        }
+    
+
+        return response()->json([
+            'ejercicio_id' => $ejercicio->id,
+            'es_correcto' => $esCorrecto,
+            'respuesta_correcta' => $ejercicio->respuesta_texto,
+        ], 200);
     }
 }

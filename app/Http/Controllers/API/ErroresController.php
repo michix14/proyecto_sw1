@@ -79,4 +79,18 @@ class ErroresController extends Controller
         $errores->delete();
         return response()->json(['message' => 'Error borrado exitosamente'], 200); //
     }
+
+
+    //funciones para el rol estudiante
+    // Obtener los errores del usuario autenticado
+    public function getErrors(Request $request)
+    {
+        $user = $request->user();
+
+        $errores = Errores::with('ejercicio')
+            ->where('user_id', $user->id)
+            ->get();
+
+        return response()->json($errores, 200);
+    }
 }

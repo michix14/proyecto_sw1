@@ -74,4 +74,16 @@ class NivelController extends Controller
         $nivel->delete();
         return response()->json(['message' => 'Nivel borrado exitosamente'], 200);  //
     }
+
+    //funciones para el rol estudiante
+    public function showLessons($id)
+    {
+        $nivel = Nivel::with('leccion')->find($id);
+
+        if (!$nivel) {
+            return response()->json(['error' => 'nivel no encontrado'], 404);
+        }
+
+        return response()->json($nivel->leccion, 200);
+    }
 }
