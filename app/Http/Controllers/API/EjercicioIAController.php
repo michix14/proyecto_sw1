@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\EjercicioIA;
+use App\Models\Errores;
 use Illuminate\Http\Request;
 
 class EjercicioIAController extends Controller
@@ -70,7 +71,7 @@ class EjercicioIAController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
         $ejercicioIA = EjercicioIA::find($id);
         if (!$ejercicioIA) {
@@ -80,4 +81,52 @@ class EjercicioIAController extends Controller
         $ejercicioIA->delete();
         return response()->json(['message' => 'ejercicioIA borrado exitosamente'], 200);//
     }
+
+    //funciones para el rol estudiante
+    // Obtener los ejercicios adaptativos del usuario autenticado
+    public function getAdaptiveExercises(Request $request)
+    {
+        $user = $request->user();
+
+        $ejercicioIA = EjercicioIA::where('user_id', $user->id)->get();
+
+        return response()->json($ejercicioIA, 200);
+    }
+
+    //funcion para evaluar si la respuesta fue correcta
+    public function submitAdaptivo($id, Request $request)
+    {
+        $ejercicioIA = EjercicioIA::find($id);
+        if (!$ejercicioIA) {
+            return response()->json(['error' => 'ejercicioIA no encontrado'], 404);
+        }
+
+        $validated = $request->validate([
+            'respuesta_usuario' => 'required|string',
+        ]);
+
+        // Simular la evaluación (puedes usar lógica más avanzada o IA aquí)
+        $esCorrecto = trim(strtolower($validated['respuesta_usuario'])) === 
+        trim(strtolower($ejercicioIA->correct_answer));
+        
+        if (!$esCorrecto) {
+            // Registrar en la tabla de errores
+            Errores::create([
+                'user_id' => $request->user()->id,
+                'ejercicio_id' => $ejercicioIA->id,
+                'error_tipo' => 'Respuesta Incorrecta',
+                'detalles' => json_encode([
+                    'respuesta_usuario' => $validated['respuesta_usuario'],
+                    'respuesta_correcta' => $ejercicioIA->respuesta_texto,
+                ]),
+            ]);
+        }
+
+        return response()->json([
+            'ejercicioIA_id' => $ejercicioIA->id,
+            'is_correct' => $esCorrecto,
+            'respuesta_correcta' => $ejercicioIA->respuesta_correcta
+        ], 200);
+    }
+    
 }

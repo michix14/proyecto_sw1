@@ -21,6 +21,10 @@ return new class extends Migration
                 ->constrained('users')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
+            $table->foreignId('suscripcion_id') // Relación con suscripciones
+            ->default(1) // Valor por defecto: "Free"
+            ->constrained('suscripcions')
+            ->nullOnDelete();
             $table->timestamps();
         });
     }

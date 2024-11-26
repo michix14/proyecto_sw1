@@ -15,6 +15,12 @@ class Ejercicio extends Model
         'respuesta_texto',
         'respuesta_audio',
         'dificultad',
+        'tipo',
+        'opciones',
+    ];
+
+    protected $casts = [
+        'opciones' => 'array', // Para manejar el JSON de forma sencilla
     ];
 
     public function leccion()
