@@ -6,7 +6,7 @@ use App\Models\Estudiante;
 use App\Http\Requests\StoreEstudianteRequest;
 use App\Http\Requests\UpdateEstudianteRequest;
 
-class EstudianteController extends Controller
+class EstudianteMonoController extends Controller
 {
     /**
      * Display a listing of the resource.

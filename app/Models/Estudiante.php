@@ -18,4 +18,9 @@ class Estudiante extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function suscripcion()
+    {
+        return $this->belongsTo(Suscripcion::class);
+    }
 }

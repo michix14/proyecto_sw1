@@ -10,8 +10,8 @@ use App\Http\Controllers\API\LeccionController;
 use App\Http\Controllers\API\NivelController;
 use App\Http\Controllers\API\ProgresoController;
 use App\Http\Controllers\API\UserController;
-use App\Models\EjercicioIA;
-use App\Models\Nivel;
+use App\Http\Controllers\API\SuscripcionController;
+use App\Http\Controllers\API\EstudianteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,24 +27,19 @@ use App\Models\Nivel;
 Route::get('validate-token', [AuthController::class, 'validateToken']);
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [UserController::class, 'store']);
-
-
-
-
-/*Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});*/
+Route::apiResource('leccion', LeccionController::class);
+Route::apiResource('ejercicioIA', EjercicioIAController::class);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
 
     //endpoints administrativos
     Route::apiResource('nivel', NivelController::class);
-    Route::apiResource('leccion', LeccionController::class);
+    Route::post('/ejercicio', [EjercicioController::class, 'store']);
     Route::apiResource('ejercicio', EjercicioController::class);
-    Route::apiResource('ejercicioIA', EjercicioIAController::class);
     Route::apiResource('progreso', ProgresoController::class);
     Route::apiResource('errores', ErroresController::class);
+    Route::apiResource('suscripcion', SuscripcionController::class);
 
     //endpoints para rol estudiante:
     //obtener las lecciones de un nivel
@@ -57,7 +52,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/leccion/{id}/completada', [ProgresoController::class, 'markComplete']);
     //Enviar respuesta a los ejercicios y verifica
     Route::post('/ejercicio/{id}/submit', [EjercicioController::class, 'submit']);
+    // Gestión de suscripciones para estudiantes
+    Route::get('/user/suscripcion', [EstudianteController::class, 'getSubscription']);
+    Route::put('/user/suscripcion', [EstudianteController::class, 'updateSubscription']);
 
+    //Enviar respuesta a los ejerciciosIA y verifica 
+    Route::get('/user/ejercicioIA', [EjercicioIAController::class, 'getAdaptiveExercises']);
+    Route::post('/ejercicioIA/{id}/submit', [EjercicioIAController::class, 'submitAdaptivo']);
     // Obtener usuario autenticado
     Route::get('/user', function (Request $request) {
         return $request->user();

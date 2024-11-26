@@ -25,6 +25,9 @@ return new class extends Migration
             $table->string('respuesta_audio', 2048)->nullable(); // URL o ruta al archivo de audio
             // Dificultad
             $table->enum('dificultad', ['easy', 'medium', 'hard']);
+            $table->enum('tipo', ['1', '2', '3', '4','5','6'])
+            ->default('1');
+            $table->json('opciones')->nullable(); //Json para las preguntas multi-opciones
             $table->timestamps();
         }); //
     }
