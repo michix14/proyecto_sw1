@@ -25,6 +25,11 @@ return new class extends Migration
             ->default(1) // Valor por defecto: "Free"
             ->constrained('suscripcions')
             ->nullOnDelete();
+            $table->foreignId('nivel_actual_id')
+            ->default(1) // Valor inicial por defecto: Nivel 1
+            ->constrained('niveles') // Relación con la tabla levels
+            ->cascadeOnUpdate()
+            ->nullOnDelete();
             $table->timestamps();
         });
     }

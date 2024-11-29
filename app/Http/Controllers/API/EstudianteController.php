@@ -80,11 +80,34 @@ class EstudianteController extends Controller
             return response()->json(['error' => 'Estudiante no encontrado'], 404);
         }
 
-        $estudiante->update(['subscripcion_id' => $validated['subscripcion_id']]);
+        $estudiante->update(['suscripcion_id' => $validated['suscripcion_id']]);
 
         return response()->json([
             'message' => 'Suscripción actualizada exitosamente',
-            'suscripcion' => $estudiante->suscription,
+            'suscripcion' => $estudiante->suscripcion,
+        ], 200);
+    }
+
+    //actualiza el nivel del estudiante
+    public function updateCurrentLevel(Request $request)
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'nivel_actual_id' => 'required|exists:niveles,id', // Validar que el nivel exista
+        ]);
+
+        $estudiante = Estudiante::where('user_id', $user->id)->first();
+
+        if (!$estudiante) {
+            return response()->json(['error' => 'Estudiante no encontrado'], 404);
+        }
+
+        $estudiante->update(['nivel_actual_id' => $validated['nivel_actual_id']]);
+
+        return response()->json([
+            'message' => 'Nivel actualizado exitosamente',
+            'nivel_actual' => $estudiante->nivelActual,
         ], 200);
     }
 }
