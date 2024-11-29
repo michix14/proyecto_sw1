@@ -44,6 +44,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('suscripcion', SuscripcionController::class);
 
     // Endpoints para rol estudiante
+    Route::get('/estudiantes/{id}', [EstudianteController::class, 'getById']);
     Route::get('/nivel/{id}/lecciones', [NivelController::class, 'showLessons']);
     Route::get('/leccion/{id}/ejercicios', [LeccionController::class, 'getExercises']);
     Route::get('/user/progreso', [ProgresoController::class, 'getProgress']);
@@ -57,6 +58,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/nivel/{id}/completado', [ProgresoController::class, 'markLevelComplete']);
     Route::put('/user/nivel-actual', [EstudianteController::class, 'updateCurrentLevel']);
     Route::post('/user/avanzar-nivel', [ProgresoController::class, 'advanceToNextLevel']);
+   
 
     // Obtener usuario autenticado
     Route::get('/user', function (Request $request) {

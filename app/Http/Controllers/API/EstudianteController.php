@@ -117,4 +117,33 @@ class EstudianteController extends Controller
             'nivel_actual' => $estudiante->nivelActual,
         ], 200);
     }
+
+    /**
+    * Obtiene los detalles de un estudiante por su ID.
+    *
+    * @param string $id El ID del estudiante.
+    * @return \Illuminate\Http\JsonResponse Respuesta en formato JSON con el estudiante encontrado o un mensaje de error.
+    */
+    public function getById(string $id): \Illuminate\Http\JsonResponse
+    {
+        // Buscar el estudiante por ID con las relaciones de suscripción y nivel actual.
+        $estudiante = Estudiante::with('suscripcion', 'nivelActual')->find($id);
+
+        // Si el estudiante no se encuentra, devolver un error 404.
+        if (!$estudiante) {
+            return response()->json(
+                ['error' => 'Estudiante no encontrado'],
+                404
+            );
+        }
+
+        // Si se encuentra, devolver la información del estudiante con un mensaje de éxito.
+        return response()->json(
+            [
+                'message' => 'Estudiante encontrado exitosamente',
+                'estudiante' => $estudiante,
+            ],
+            200
+        );
+    }
 }
