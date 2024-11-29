@@ -55,10 +55,19 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Gestión de suscripciones para estudiantes
     Route::get('/user/suscripcion', [EstudianteController::class, 'getSubscription']);
     Route::put('/user/suscripcion', [EstudianteController::class, 'updateSubscription']);
-
     //Enviar respuesta a los ejerciciosIA y verifica 
     Route::get('/user/ejercicioIA', [EjercicioIAController::class, 'getAdaptiveExercises']);
+    //verifica para los ejercicios IA en caso de usar
     Route::post('/ejercicioIA/{id}/submit', [EjercicioIAController::class, 'submitAdaptivo']);
+    // Verificar si completó todas las lecciones de un nivel
+    Route::get('/nivel/{id}/completado', [ProgresoController::class, 'hasCompletedAllLessons']);
+    // Marcar todas las lecciones de un nivel como completadas
+    Route::post('/nivel/{id}/completado', [ProgresoController::class, 'markLevelComplete']);
+    // Actualizar el nivel actual del estudiante
+    Route::put('/user/nivel-actual', [EstudianteController::class, 'updateCurrentLevel']);
+    //avanza el nivel actual al siguiente
+    Route::post('/user/avanzar-nivel', [ProgresoController::class, 'advanceToNextLevel']);
+
     // Obtener usuario autenticado
     Route::get('/user', function (Request $request) {
         return $request->user();

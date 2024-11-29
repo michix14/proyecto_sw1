@@ -29,4 +29,5 @@ class Leccion extends Model
     {
         return $this->hasMany(Progreso::class);
     }
+    
 }

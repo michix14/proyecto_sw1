@@ -12,7 +12,9 @@ class Estudiante extends Model
     protected $fillable = [
         'nombre',
         'telefono',
-        'sexo'
+        'sexo',
+        'suscripcion_id',
+        'nivel_actual_id'
     ];
     public function user()
     {
@@ -22,5 +24,10 @@ class Estudiante extends Model
     public function suscripcion()
     {
         return $this->belongsTo(Suscripcion::class);
+    }
+
+    public function nivelActual()
+    {
+        return $this->belongsTo(nivel::class, 'nivel_actual_id');
     }
 }
