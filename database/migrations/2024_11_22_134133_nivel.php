@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('niveles', function (Blueprint $table) {
+        Schema::create('niveles', function (Blueprint $table): void {
             $table->id();
-            $table->string('nombre', 50); // Nombre del nivel (e.g., Beginner)
-            $table->text('descripcion')->nullable(); // Descripción opcional
+            $table->string('nombre', 50)->comment('Nombre del nivel (e.g., Beginner)');
+            $table->text('descripcion')->nullable()->comment('Descripción opcional');
             $table->timestamps();
-        }); //
+        });
     }
 
     /**
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('niveles'); //
+        Schema::dropIfExists('niveles');
     }
 };

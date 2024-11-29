@@ -7,27 +7,48 @@ use Illuminate\Database\Eloquent\Model;
 
 class Leccion extends Model
 {
-    protected $table = 'lecciones'; // Nombre de la tabla corregido
     use HasFactory;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'lecciones';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'nombre',
         'descripcion',
         'nivel_id',
     ];
 
-    public function nivel()
+    /**
+     * Get the nivel associated with the lección.
+     */
+    public function nivel(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Nivel::class);
     }
 
-    public function ejercicio()
+    /**
+     * Get the ejercicios associated with the lección.
+     */
+    public function ejercicio(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Ejercicio::class);
     }
 
-    public function progreso()
+    /**
+     * Get the progresos associated with the lección.
+     */
+    public function progreso(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Progreso::class);
     }
-    
 }
+

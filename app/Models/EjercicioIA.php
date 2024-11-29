@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class EjercicioIA extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'user_id',
         'pregunta',
@@ -16,11 +22,19 @@ class EjercicioIA extends Model
         'generado_desde',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
-        'generado_desde' => 'array', // Para manejar el JSON de forma sencilla
+        'generado_desde' => 'array',
     ];
 
-    public function user()
+    /**
+     * Get the user associated with the ejercicio IA.
+     */
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }
