@@ -22,9 +22,16 @@ class AuthController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
         $user = User::where('email', $request['email'])->firstOrFail();
-        if (!$user->hasRole('estudiante'))
+        if ($user->hasRole('admin'))
         {
-            return response()->json(['message' => 'Este usuario no tiene el rol de estudiante'], 403);
+            $token = $user->createToken('auth_token')->plainTextToken;
+            return response()->json([
+            'message' => 'Hi '.$user->name,
+            'accessToken' => $token,
+            'tokenType' => 'Bearer',
+            'user' => $user,
+            'role' => 'admin'
+            ], 200);
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;

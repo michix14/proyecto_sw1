@@ -7,6 +7,7 @@ use App\Models\Ejercicio;
 use App\Models\Errores;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Services\OpenAIService;
 
 class EjercicioController extends Controller
 {
@@ -139,7 +140,8 @@ class EjercicioController extends Controller
     /**
      * Evaluar la respuesta del estudiante.
      */
-    public function submit(int $id, Request $request): \Illuminate\Http\JsonResponse
+    // Evaluar la respuesta del estudiante
+    public function submit($id, Request $request, OpenAIService $openAIService)
     {
         $ejercicio = Ejercicio::find($id);
 
@@ -154,6 +156,7 @@ class EjercicioController extends Controller
         $esCorrecto = trim(strtolower($validated['respuesta_usuario'])) ===
             trim(strtolower($ejercicio->respuesta_texto));
 
+        $errores = [];
         if (!$esCorrecto) {
             Errores::create([
                 'user_id' => $request->user()->id,
@@ -164,12 +167,24 @@ class EjercicioController extends Controller
                     'respuesta_correcta' => $ejercicio->respuesta_texto,
                 ]),
             ]);
+
+            // Agregar a los errores para la retroalimentación
+            $errores[] = [
+                'pregunta' => $ejercicio->pregunta_texto,
+                'respuesta_correcta' => $ejercicio->respuesta_texto,
+                'respuesta_usuario' => $validated['respuesta_usuario'],
+            ];
         }
+
+        // Generar retroalimentación si hubo errores
+        $retroalimentacion = count($errores) > 0
+            ? $openAIService->generarRetroalimentacion($errores)
+            : "¡Excelente trabajo! Todas las respuestas son correctas.";
 
         return response()->json([
             'ejercicio_id' => $ejercicio->id,
             'es_correcto' => $esCorrecto,
-            'respuesta_correcta' => $ejercicio->respuesta_texto,
+            'retroalimentacion' => $retroalimentacion,
         ], 200);
     }
 }
