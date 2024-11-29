@@ -1,12 +1,15 @@
 <?php
 
-namespace  App\Http\Controllers\API;
+namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DTOEStudianteRegistered extends JsonResource{
-
-    public static function getResponse($user, $estudiante, $token): array
+class DTOEstudianteRegistered extends JsonResource
+{
+    /**
+     * Generate the response structure for a registered student.
+     */
+    public static function getResponse($user, $estudiante, string $token): array
     {
         return [
             'name' => $estudiante->nombre,
@@ -16,7 +19,7 @@ class DTOEStudianteRegistered extends JsonResource{
             'estudiante_id' => $estudiante->id,
             'user_id' => $user->id,
             'accessToken' => $token,
-            'tokenType'=> 'Bearer',
+            'tokenType' => 'Bearer',
         ];
     }
 }
