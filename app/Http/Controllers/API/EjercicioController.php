@@ -75,7 +75,7 @@ class EjercicioController extends Controller
 
             return response()->json([
                 'message' => 'Ejercicio creado con éxito',
-                'ejercicio' => $ejercicio
+                'ejercicio' => $ejercicio,
             ], 201);
         } catch (\Exception $e) {
             Log::error('Error en el método store:', ['error' => $e->getMessage()]);
@@ -89,6 +89,7 @@ class EjercicioController extends Controller
     public function show(int $id): \Illuminate\Http\JsonResponse
     {
         $ejercicio = Ejercicio::with('leccion')->find($id);
+
         if (!$ejercicio) {
             return response()->json(['error' => 'Ejercicio no encontrado'], 404);
         }
@@ -102,6 +103,7 @@ class EjercicioController extends Controller
     public function update(Request $request, int $id): \Illuminate\Http\JsonResponse
     {
         $ejercicio = Ejercicio::find($id);
+
         if (!$ejercicio) {
             return response()->json(['error' => 'Ejercicio no encontrado'], 404);
         }
@@ -128,6 +130,7 @@ class EjercicioController extends Controller
     public function destroy(int $id): \Illuminate\Http\JsonResponse
     {
         $ejercicio = Ejercicio::find($id);
+
         if (!$ejercicio) {
             return response()->json(['error' => 'Ejercicio no encontrado'], 404);
         }
@@ -140,8 +143,7 @@ class EjercicioController extends Controller
     /**
      * Evaluar la respuesta del estudiante.
      */
-    // Evaluar la respuesta del estudiante
-    public function submit($id, Request $request, OpenAIService $openAIService)
+    public function submit(int $id, Request $request, OpenAIService $openAIService): \Illuminate\Http\JsonResponse
     {
         $ejercicio = Ejercicio::find($id);
 
@@ -168,7 +170,6 @@ class EjercicioController extends Controller
                 ]),
             ]);
 
-            // Agregar a los errores para la retroalimentación
             $errores[] = [
                 'pregunta' => $ejercicio->pregunta_texto,
                 'respuesta_correcta' => $ejercicio->respuesta_texto,
@@ -176,10 +177,9 @@ class EjercicioController extends Controller
             ];
         }
 
-        // Generar retroalimentación si hubo errores
         $retroalimentacion = count($errores) > 0
             ? $openAIService->generarRetroalimentacion($errores)
-            : "¡Excelente trabajo! Todas las respuestas son correctas.";
+            : '¡Excelente trabajo! Todas las respuestas son correctas.';
 
         return response()->json([
             'ejercicio_id' => $ejercicio->id,
