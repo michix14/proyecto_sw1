@@ -19,6 +19,7 @@ class Estudiante extends Model
         'telefono',
         'sexo',
         'suscripcion_id',
+        'user_id',
         'nivel_actual_id',
     ];
 
