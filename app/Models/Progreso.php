@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Progreso extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'user_id',
         'leccion_id',
@@ -15,12 +21,18 @@ class Progreso extends Model
         'completado_fecha',
     ];
 
-    public function user()
+    /**
+     * Get the user associated with the progreso.
+     */
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function leccion()
+    /**
+     * Get the lección associated with the progreso.
+     */
+    public function leccion(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Leccion::class);
     }

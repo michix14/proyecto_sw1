@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('suscripcions', function (Blueprint $table) {
+        Schema::create('suscripcions', function (Blueprint $table): void {
             $table->id();
-            $table->string('nombre', 50); // Nombre del plan (e.g., Free, Premium)
-            $table->decimal('precio', 8, 2)->default(0); // Precio del plan
-            $table->text('caracteristica')->nullable(); // Lista de características
+            $table->string('nombre', 50)->comment('Nombre del plan (e.g., Free, Premium)');
+            $table->decimal('precio', 8, 2)->default(0)->comment('Precio del plan');
+            $table->text('caracteristica')->nullable()->comment('Lista de características');
             $table->timestamps();
         });
     }

@@ -11,15 +11,17 @@ class LeccionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
-        return response()->json(Leccion::with('nivel')->get(), 200);  //
+        $lecciones = Leccion::with('nivel')->get();
+
+        return response()->json($lecciones, 200);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\JsonResponse
     {
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
@@ -28,29 +30,33 @@ class LeccionController extends Controller
         ]);
 
         $leccion = Leccion::create($validated);
-        return response()->json($leccion, 201);//
+
+        return response()->json($leccion, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(int $id): \Illuminate\Http\JsonResponse
     {
         $leccion = Leccion::with('nivel')->find($id);
+
         if (!$leccion) {
-            return response()->json(['error' => 'Leccion no encontrada'], 404);
+            return response()->json(['error' => 'Lección no encontrada'], 404);
         }
-        return response()->json($leccion, 200); //
+
+        return response()->json($leccion, 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): \Illuminate\Http\JsonResponse
     {
         $leccion = Leccion::find($id);
+
         if (!$leccion) {
-            return response()->json(['error' => 'Leccion no encontrada'], 404);
+            return response()->json(['error' => 'Lección no encontrada'], 404);
         }
 
         $validated = $request->validate([
@@ -60,33 +66,39 @@ class LeccionController extends Controller
         ]);
 
         $leccion->update($validated);
-        return response()->json($leccion, 200); //
+
+        return response()->json($leccion, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(int $id): \Illuminate\Http\JsonResponse
     {
         $leccion = Leccion::find($id);
+
         if (!$leccion) {
-            return response()->json(['error' => 'Leccion no encontrada'], 404);
+            return response()->json(['error' => 'Lección no encontrada'], 404);
         }
 
         $leccion->delete();
-        return response()->json(['message' => 'Leccion borrada exitosamente'], 200);
+
+        return response()->json(['message' => 'Lección borrada exitosamente'], 200);
     }
 
-    //funciones rol estudiante
-    public function getExercises($id)
+    /**
+     * Obtener los ejercicios de una lección.
+     */
+    public function getExercises(int $id): \Illuminate\Http\JsonResponse
     {
         $leccion = Leccion::find($id);
 
         if (!$leccion) {
-            return response()->json(['error' => 'leccion no encontrada'], 404);
+            return response()->json(['error' => 'Lección no encontrada'], 404);
         }
 
-        $ejercicios = $leccion->ejercicio; // Usa la relación definida en el modelo Lesson
+        $ejercicios = $leccion->ejercicio; // Usa la relación definida en el modelo Leccion
+
         return response()->json($ejercicios, 200);
     }
 }

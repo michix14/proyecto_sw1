@@ -11,16 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('lecciones', function (Blueprint $table) {
+        Schema::create('lecciones', function (Blueprint $table): void {
             $table->id();
-            $table->string('nombre', 255);
-            $table->text('descripcion')->nullable();
-            $table->foreignId('nivel_id') // Relación con niveles
+            $table->string('nombre', 255)->comment('Nombre de la lección');
+            $table->text('descripcion')->nullable()->comment('Descripción de la lección');
+            $table->foreignId('nivel_id')
                 ->constrained('niveles')
                 ->cascadeOnUpdate()
-                ->cascadeOnDelete();
+                ->cascadeOnDelete()
+                ->comment('Relación con la tabla niveles');
             $table->timestamps();
-        }); ////
+        });
     }
 
     /**
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('lecciones'); //
+        Schema::dropIfExists('lecciones');
     }
 };
