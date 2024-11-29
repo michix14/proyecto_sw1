@@ -142,23 +142,31 @@ class EjercicioController extends Controller
 
     /**
      * Evaluar la respuesta del estudiante.
+     *
+     * @param int $id
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function submit(int $id, Request $request, OpenAIService $openAIService): \Illuminate\Http\JsonResponse
+    public function submit(int $id, Request $request): \Illuminate\Http\JsonResponse
     {
+        // Buscar el ejercicio por ID
         $ejercicio = Ejercicio::find($id);
 
+        // Verificar si el ejercicio existe
         if (!$ejercicio) {
             return response()->json(['error' => 'Ejercicio no encontrado'], 404);
         }
 
+        // Validar los datos enviados en la solicitud
         $validated = $request->validate([
             'respuesta_usuario' => 'required|string',
         ]);
 
+        // Evaluar si la respuesta del usuario es correcta
         $esCorrecto = trim(strtolower($validated['respuesta_usuario'])) ===
             trim(strtolower($ejercicio->respuesta_texto));
 
-        $errores = [];
+        // Registrar en la tabla de errores si la respuesta es incorrecta
         if (!$esCorrecto) {
             Errores::create([
                 'user_id' => $request->user()->id,
@@ -169,22 +177,13 @@ class EjercicioController extends Controller
                     'respuesta_correcta' => $ejercicio->respuesta_texto,
                 ]),
             ]);
-
-            $errores[] = [
-                'pregunta' => $ejercicio->pregunta_texto,
-                'respuesta_correcta' => $ejercicio->respuesta_texto,
-                'respuesta_usuario' => $validated['respuesta_usuario'],
-            ];
         }
 
-        $retroalimentacion = count($errores) > 0
-            ? $openAIService->generarRetroalimentacion($errores)
-            : '¡Excelente trabajo! Todas las respuestas son correctas.';
-
+        // Responder con los resultados de la evaluación
         return response()->json([
             'ejercicio_id' => $ejercicio->id,
             'es_correcto' => $esCorrecto,
-            'retroalimentacion' => $retroalimentacion,
+            'respuesta_correcta' => $ejercicio->respuesta_texto,
         ], 200);
     }
 }
