@@ -11,18 +11,29 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('errores', function (Blueprint $table) {
+        Schema::create('errores', function (Blueprint $table): void {
             $table->id();
+
             $table->foreignId('user_id')
                 ->constrained('users')
                 ->cascadeOnUpdate()
-                ->cascadeOnDelete();
+                ->cascadeOnDelete()
+                ->comment('Relación con la tabla de usuarios');
+
             $table->foreignId('ejercicio_id')
                 ->constrained('ejercicios')
                 ->cascadeOnUpdate()
-                ->cascadeOnDelete();
-            $table->text('error_tipo')->nullable(); // Descripción del error
-            $table->json('detalles')->nullable(); // Detalles adicionales sobre el error (e.g., respuestas del usuario)
+                ->cascadeOnDelete()
+                ->comment('Relación con la tabla de ejercicios');
+
+            $table->text('error_tipo')
+                ->nullable()
+                ->comment('Descripción del error');
+
+            $table->json('detalles')
+                ->nullable()
+                ->comment('Detalles adicionales sobre el error, como respuestas del usuario');
+
             $table->timestamps();
         });
     }

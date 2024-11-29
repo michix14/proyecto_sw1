@@ -11,15 +11,17 @@ class SuscripcionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
-        return response()->json(Suscripcion::all(), 200); //
+        $suscripciones = Suscripcion::all();
+
+        return response()->json($suscripciones, 200);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\JsonResponse
     {
         $validated = $request->validate([
             'nombre' => 'required|string|max:50',
@@ -28,29 +30,33 @@ class SuscripcionController extends Controller
         ]);
 
         $suscripcion = Suscripcion::create($validated);
-        return response()->json($suscripcion, 201);//
+
+        return response()->json($suscripcion, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(int $id): \Illuminate\Http\JsonResponse
     {
         $suscripcion = Suscripcion::find($id);
+
         if (!$suscripcion) {
-            return response()->json(['error' => 'Subscripcion no encontrada'], 404);
+            return response()->json(['error' => 'Suscripción no encontrada'], 404);
         }
-        return response()->json($suscripcion, 200);//
+
+        return response()->json($suscripcion, 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): \Illuminate\Http\JsonResponse
     {
         $suscripcion = Suscripcion::find($id);
+
         if (!$suscripcion) {
-            return response()->json(['error' => 'Subscripcion no encontrada'], 404);
+            return response()->json(['error' => 'Suscripción no encontrada'], 404);
         }
 
         $validated = $request->validate([
@@ -60,20 +66,23 @@ class SuscripcionController extends Controller
         ]);
 
         $suscripcion->update($validated);
-        return response()->json($suscripcion, 200);//
+
+        return response()->json($suscripcion, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(int $id): \Illuminate\Http\JsonResponse
     {
         $suscripcion = Suscripcion::find($id);
+
         if (!$suscripcion) {
-            return response()->json(['error' => 'Subscripcion no encontrada'], 404);
+            return response()->json(['error' => 'Suscripción no encontrada'], 404);
         }
 
         $suscripcion->delete();
-        return response()->json(['message' => 'Subscription borrada exitosamente'], 200);//
+
+        return response()->json(['message' => 'Suscripción borrada exitosamente'], 200);
     }
 }

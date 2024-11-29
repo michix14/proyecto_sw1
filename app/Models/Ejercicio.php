@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Ejercicio extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'leccion_id',
         'pregunta_texto',
@@ -19,11 +25,19 @@ class Ejercicio extends Model
         'opciones',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
-        'opciones' => 'array', // Para manejar el JSON de forma sencilla
+        'opciones' => 'array',
     ];
 
-    public function leccion()
+    /**
+     * Get the lección associated with the ejercicio.
+     */
+    public function leccion(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Leccion::class);
     }

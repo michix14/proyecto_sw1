@@ -11,25 +11,28 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('estudiantes', function (Blueprint $table) {
+        Schema::create('estudiantes', function (Blueprint $table): void {
             $table->id();
-            $table->string('nombre', 70);
-            $table->integer('telefono')->unsigned();
-            $table->string('sexo', 1)->nullable();
+            $table->string('nombre', 70)->comment('Nombre completo del estudiante');
+            $table->unsignedInteger('telefono')->comment('Número de teléfono del estudiante');
+            $table->string('sexo', 1)->nullable()->comment('Sexo del estudiante: M (Masculino), F (Femenino)');
             $table->foreignId('user_id')
                 ->nullable()
                 ->constrained('users')
                 ->cascadeOnUpdate()
-                ->cascadeOnDelete();
-            $table->foreignId('suscripcion_id') // Relación con suscripciones
-            ->default(1) // Valor por defecto: "Free"
-            ->constrained('suscripcions')
-            ->nullOnDelete();
+                ->cascadeOnDelete()
+                ->comment('Relación con la tabla de usuarios');
+            $table->foreignId('suscripcion_id')
+                ->default(1)
+                ->constrained('suscripcions')
+                ->nullOnDelete()
+                ->comment('Relación con la tabla suscripcions. Por defecto: Free');
             $table->foreignId('nivel_actual_id')
-            ->default(1) // Valor inicial por defecto: Nivel 1
-            ->constrained('niveles') // Relación con la tabla levels
-            ->cascadeOnUpdate()
-            ->nullOnDelete();
+                ->default(1)
+                ->constrained('niveles')
+                ->cascadeOnUpdate()
+                ->nullOnDelete()
+                ->comment('Relación con la tabla niveles. Nivel inicial por defecto: Nivel 1');
             $table->timestamps();
         });
     }

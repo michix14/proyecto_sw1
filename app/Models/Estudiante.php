@@ -9,25 +9,41 @@ class Estudiante extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'nombre',
         'telefono',
         'sexo',
         'suscripcion_id',
-        'nivel_actual_id'
+        'nivel_actual_id',
     ];
-    public function user()
+
+    /**
+     * Get the user associated with the estudiante.
+     */
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function suscripcion()
+    /**
+     * Get the suscripción associated with the estudiante.
+     */
+    public function suscripcion(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Suscripcion::class);
     }
 
-    public function nivelActual()
+    /**
+     * Get the current level associated with the estudiante.
+     */
+    public function nivelActual(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(nivel::class, 'nivel_actual_id');
+        return $this->belongsTo(Nivel::class, 'nivel_actual_id');
     }
 }
+
