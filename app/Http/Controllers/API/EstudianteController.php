@@ -119,11 +119,11 @@ class EstudianteController extends Controller
     }
 
     /**
-    * Obtiene los detalles de un estudiante por su ID.
-    *
-    * @param string $id El ID del estudiante.
-    * @return \Illuminate\Http\JsonResponse Respuesta en formato JSON con el estudiante encontrado o un mensaje de error.
-    */
+     * Obtiene los detalles de un estudiante por su ID.
+     *
+     * @param string $id El ID del estudiante.
+     * @return \Illuminate\Http\JsonResponse Respuesta en formato JSON con el estudiante encontrado o un mensaje de error.
+     */
     public function getById(string $id): \Illuminate\Http\JsonResponse
     {
         // Buscar el estudiante por ID con las relaciones de suscripción y nivel actual.
@@ -138,6 +138,37 @@ class EstudianteController extends Controller
         }
 
         // Si se encuentra, devolver la información del estudiante con un mensaje de éxito.
+        return response()->json(
+            [
+                'message' => 'Estudiante encontrado exitosamente',
+                'estudiante' => $estudiante,
+            ],
+            200
+        );
+    }
+
+    /**
+     * Obtiene los detalles de un estudiante por su user_id.
+     *
+     * @param string $id El user_id del estudiante.
+     * @return \Illuminate\Http\JsonResponse Respuesta en formato JSON con el estudiante encontrado o un mensaje de error.
+     */
+    public function getByUserId(string $id): \Illuminate\Http\JsonResponse
+    {
+        // Buscar al estudiante por user_id, incluyendo las relaciones con suscripción y nivel actual.
+        $estudiante = Estudiante::with('suscripcion', 'nivelActual')
+            ->where('user_id', $id)
+            ->first();
+
+        // Verificar si el estudiante existe.
+        if (!$estudiante) {
+            return response()->json(
+                ['error' => 'Estudiante no encontrado'],
+                404
+            );
+        }
+
+        // Retornar el estudiante encontrado con un mensaje de éxito.
         return response()->json(
             [
                 'message' => 'Estudiante encontrado exitosamente',

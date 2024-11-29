@@ -45,6 +45,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Endpoints para rol estudiante
     Route::get('/estudiantes/{id}', [EstudianteController::class, 'getById']);
+    Route::get('/estudiantes/user/{id}', [EstudianteController::class, 'getByUserId']);
     Route::get('/nivel/{id}/lecciones', [NivelController::class, 'showLessons']);
     Route::get('/leccion/{id}/ejercicios', [LeccionController::class, 'getExercises']);
     Route::get('/user/progreso', [ProgresoController::class, 'getProgress']);
