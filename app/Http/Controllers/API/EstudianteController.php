@@ -155,6 +155,7 @@ class EstudianteController extends Controller
      */
     public function getByUserId(string $id): \Illuminate\Http\JsonResponse
     {
+        
         // Buscar al estudiante por user_id, incluyendo las relaciones con suscripción y nivel actual.
         $estudiante = Estudiante::with('suscripcion', 'nivelActual')
             ->where('user_id', $id)
